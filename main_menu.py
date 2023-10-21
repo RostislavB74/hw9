@@ -9,7 +9,7 @@ def menu():
 
     commands = [" 1  - Create DB and load date",
                 " 2  - Check DB connection",
-                " 3  - Load  в розробці ",
+                " 3  - Load ",
                 " 4  - Output в розробці ",
                 " 5  - Create в розробці",
                 " 6  - Find all date DB ",
@@ -86,7 +86,7 @@ def menu():
             print("_"*30)
             print("|{:^30}|".format("✨ Find Quotes! ✨"))
             print("|"+"_"*30 + "|")
-            
+
             print(find_quote())
         elif user_input == '0' or user_input.lower() == "exit":
             print('\nGoodbye!\n')
