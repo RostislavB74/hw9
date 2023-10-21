@@ -20,4 +20,4 @@ def connect_db(name_db):
 
 
 if __name__ == '__main__':
-    print(connect_db('hw8_1'))
+    print(connect_db('hw9'))

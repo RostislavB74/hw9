@@ -21,17 +21,20 @@ def create_db_load_date(name_db):
                 with open(os.path.join(input_directory, file), "r", encoding="utf-8") as af:
                     authors_date = json.load(af)
                     collection.insert_many(authors_date)
-                
+
             if file.startswith("quotes"):
                 with open(os.path.join(input_directory, file), "r", encoding="utf-8") as qf:
                     file_date = json.load(qf)
                     for quote_data in file_date:
-                        author_fullname = quote_data.get('author')
-                        author = db.authors.find_one({'fullname': author_fullname})
-                        # print(author)
-                        quote_data['author'] = author['_id']
-                        db.quotes.insert_one(quote_data) 
- 
+                        try:
+                            author_fullname = quote_data.get('author')
+                            author = db.authors.find_one(
+                                {'fullname': author_fullname})
+                            # print(author)
+                            quote_data['author'] = author['_id']
+                            db.quotes.insert_one(quote_data)
+                        except:
+                            continue
         shutil.move(f'input/{file}', f'arch/{file}')
 
     client.close()
