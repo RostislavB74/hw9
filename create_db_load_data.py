@@ -23,15 +23,23 @@ def create_db_load_date(name_db):
                     collection.insert_many(authors_date)
 
             if file.startswith("quotes"):
+
                 with open(os.path.join(input_directory, file), "r", encoding="utf-8") as qf:
+                    count = 0
                     file_date = json.load(qf)
                     for quote_data in file_date:
                         author_fullname = quote_data.get('author')
                         author = db.authors.find_one(
                             {'fullname': author_fullname})
                         # print(author)
-                        quote_data['author'] = author['_id']
-                        db.quotes.insert_one(quote_data)
+                        try:
+                            quote_data['author'] = author['_id']
+                            db.quotes.insert_one(quote_data)
+                            count += 1
+                            print(count)
+                        except Exception as e:
+                            print(e)
+                            continue
         shutil.move(f'input/{file}', f'arch/{file}')
 
     client.close()
@@ -39,4 +47,4 @@ def create_db_load_date(name_db):
 
 
 if __name__ == '__main__':
-    create_db_load_date("hw81")
+    create_db_load_date("hw90")
