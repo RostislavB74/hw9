@@ -1,24 +1,25 @@
 import json
+
 import scrapy
 from itemadapter import ItemAdapter
 from scrapy.crawler import CrawlerProcess
 from scrapy.item import Item, Field
 
 
-class QuoteItem (Item):
-    tags = Field()
+class QuoteItem(Item):
+    keywords = Field()
     author = Field()
     quote = Field()
 
 
-class AuthorItem (Item):
+class AuthorItem(Item):
     fullname = Field()
-    born_date = Field()
-    born_location = Field()
-    description = Field()
+    date_born = Field()
+    location_born = Field()
+    bio = Field()
 
 
-class QuotesPipline():
+class QuotesPipline:
     quotes = []
     authors = []
 
@@ -28,7 +29,7 @@ class QuotesPipline():
             self.authors.append({
                 "fullname": adapter["fullname"],
                 "born_date": adapter["born_date"],
-                "born_location": adapter["born_location"],
+                "Born_location": adapter["born_location"],
                 "description": adapter["description"],
             })
         if 'quote' in adapter.keys():
@@ -40,9 +41,9 @@ class QuotesPipline():
         return
 
     def close_spider(self, spider):
-        with open('input/quotes.json', 'w', encoding='utf-8') as fd:
+        with open('quotes.json', 'w', encoding='utf-8') as fd:
             json.dump(self.quotes, fd, ensure_ascii=False)
-        with open('input/authors.json', 'w', encoding='utf-8') as fd:
+        with open('authors.json', 'w', encoding='utf-8') as fd:
             json.dump(self.authors, fd, ensure_ascii=False)
 
 
@@ -51,7 +52,6 @@ class QuotesSpider(scrapy.Spider):
     allowed_domains = ['quotes.toscrape.com']
     start_urls = ['http://quotes.toscrape.com/']
     custom_settings = {"ITEM_PIPELINES": {QuotesPipline: 300}}
-    # custom_settings = {"FEED_FORMAT": "json", "FEED_URI": "result.json"}
 
     def parse(self, response, *_):
         for quote in response.xpath("/html//div[@class='quote']"):
@@ -69,22 +69,16 @@ class QuotesSpider(scrapy.Spider):
         author = response.xpath('/html//div[@class="author-details"]')
         fullname = author.xpath(
             'h3[@class="author-title"]/text()').get().strip()
-        born_date = author.xpath(
+        date_born = author.xpath(
             'p/span[@class="author-born-date"]/text()').get().strip()
-        born_location = author.xpath(
+        location_born = author.xpath(
             'p/span[@class="author-born-location"]/text()').get().strip()
-        description = author.xpath(
+        bio = author.xpath(
             'div[@class="author-description"]/text()').get().strip()
-        yield AuthorItem(fullname=fullname, born_date=born_date, born_location=born_location, description=description)
-
-    # next_link = response.xpath("//li[@class='next']/a/@href").get()
-
-
-def scraping_site():
-    process = CrawlerProcess()
-    process.crawl(QuotesSpider)
-    process.start()
+        yield AuthorItem(fullname=fullname, date_born=date_born, location_born=location_born, bio=bio)
 
 
 if __name__ == '__main__':
-    scraping_site()
+    process = CrawlerProcess()
+    process.crawl(QuotesSpider)
+    process.start()

@@ -47,4 +47,4 @@ def create_db_load_date(name_db):
 
 
 if __name__ == '__main__':
-    create_db_load_date("hw90")
+    create_db_load_date("hw777")

@@ -2,6 +2,8 @@ import json
 import re
 import redis
 
+
+# from models import Authors, Quotes
 from mongoengine import connect
 
 from models import Authors, Quotes
@@ -11,8 +13,7 @@ from connect import uri
 connect(host=uri)
 
 # Connect to Redis
-# redis_client = redis.StrictRedis(
-#     host='localhost', port=6379, password=None, decode_responses=True)
+# redis_client = redis.StrictRedis(host='localhost', port=6379, password=None, decode_responses=True)
 
 
 def search_by_tag(tag):
@@ -55,40 +56,45 @@ def search_by_author(author_name):
         return []
 
 
-while True:
+def find_quote():
+    while True:
 
-    instruction = "Give me the command. Ex.: 'name:Steve Martin' or 'tag:life' or 'tags:life,live'. Type '0' to exit"
-    print(instruction)
-    try:
-        user_input_command = input(">>>").strip()
+        instruction = "Give me the command. Ex.: 'name:Steve Martin' or 'tag:life' or 'tags:life,live'. Type '0' to exit"
+        print(instruction)
+        try:
+            user_input_command = input(">>>").strip()
 
-        if user_input_command == "0":
-            print("Program closed")
-            break
-        user_command = user_input_command.split(":")
+            if user_input_command == "0":
+                print("Program closed")
+                break
+            user_command = user_input_command.split(":")
 
-        if len(user_command) != 2:
-            print(instruction)
-            continue
+            if len(user_command) != 2:
+                print(instruction)
+                continue
 
-        command, value = user_command
-        command = command.lower()
+            command, value = user_command
+            command = command.lower()
 
-        if command == "name":
-            quotes = search_by_author(value)
-        elif command == "tag":
-            quotes = search_by_tag(value)
-        elif command == "tags":
-            tags_search = value.split(",")
-            quotes = search_by_tags(tags_search)
-        else:
-            print(instruction)
-            continue
+            if command == "name":
+                quotes = search_by_author(value)
+            elif command == "tag":
+                quotes = search_by_tag(value)
+            elif command == "tags":
+                tags_search = value.split(",")
+                quotes = search_by_tags(tags_search)
+            else:
+                print(instruction)
+                continue
 
-        if quotes:
-            for author, quote in quotes:
-                print(f"Author: {author}\nQuote: {quote}\n")
-        else:
-            print("No quotes.")
-    except Exception as err:
-        print(err)
+            if quotes:
+                for author, quote in quotes:
+                    print(f"Author: {author}\nQuote: {quote}\n")
+            else:
+                print("No quotes.")
+        except Exception as err:
+            print(err)
+
+
+if __name__ == '__main__':
+    find_quote()

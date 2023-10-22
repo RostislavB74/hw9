@@ -3,13 +3,14 @@ from connect import connect_db
 from find import find_db
 from create_db_load_data import create_db_load_date
 from find_quote import find_quote
+from scrap import scraping_site
 
 
 def menu():
 
     commands = [" 1  - Create DB and load date",
                 " 2  - Check DB connection",
-                " 3  - Load ",
+                " 3  - Scrap ",
                 " 4  - Output в розробці ",
                 " 5  - Create в розробці",
                 " 6  - Find all date DB ",
@@ -46,11 +47,11 @@ def menu():
             print(connect_db(name_db))
         elif user_input == '3':
             print("_"*30)
-            print("|{:^30}|".format("✨ Load date to DB! ✨"))
+            print("|{:^30}|".format("✨ Scraping site! ✨"))
             print("|"+"_"*28 + "|")
-            print('В розробці')
+            # print('В розробці')
             # result = load_to_db()
-            # print(result)
+            print(scraping_site())
         elif user_input == '4':
             print("_"*30)
             print("|{:^30}|".format("✨ Output date from DB! ✨"))
